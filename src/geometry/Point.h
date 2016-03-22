@@ -9,6 +9,9 @@ private:
     T x, y;
 
 public:
+    Point(): x(0), y(0) {
+    }
+
     Point(T x, T y): x(x), y(y) {
     }
 

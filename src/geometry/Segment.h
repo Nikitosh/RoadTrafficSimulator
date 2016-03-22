@@ -25,15 +25,15 @@ public:
         return getVector().getDirection();
     }
 
-    inline Point<T> getPoint(double ratio) const {
-        return target * ratio + source * (1 - ratio);
+    inline Point<T> getPoint(T ratio) const {
+        return source * (1 - ratio) + target * ratio;
     }
 
     inline Point<T> getCenter() const {
         return getPoint(0.5);
     }
 
-    inline Segment getSubsegment(double ratioL, double ratioR) const {
+    inline Segment getSubsegment(T ratioL, T ratioR) const {
         return Segment(getPoint(ratioL), getPoint(ratioR));
     }
 
