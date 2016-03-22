@@ -1,7 +1,7 @@
 #ifndef ROADTRAFFICSIMULATOR_POINT_H
 #define ROADTRAFFICSIMULATOR_POINT_H
 
-#include <cmath>
+#include <c++/cmath>
 
 template <typename T>
 class Point {
@@ -39,6 +39,14 @@ public:
     inline Point getNormalizedPoint() const {
         T length = length();
         return Point(x / length, y / length);
+    }
+
+    inline T getX() const {
+        return x;
+    }
+
+    inline T getY() const {
+        return y;
     }
 };
 

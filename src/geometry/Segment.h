@@ -1,7 +1,7 @@
 #ifndef ROADTRAFFICSIMULATOR_SEGMENT_H
 #define ROADTRAFFICSIMULATOR_SEGMENT_H
 
-#include <vector>
+#include <c++/vector>
 #include "Point.h"
 
 template <typename T>
@@ -13,7 +13,7 @@ public:
     Segment(Point<T> source, Point<T> target): source(source), target(target) {
     }
 
-    inline Point getVector() const {
+    inline Point<T> getVector() const {
         return target - source;
     }
 
@@ -25,22 +25,25 @@ public:
         return getVector().getDirection();
     }
 
-    inline Point getPoint(double ratio) {
+    inline Point<T> getPoint(double ratio) const {
         return target * ratio + source * (1 - ratio);
     }
 
-    inline Point getCenter() {
+    inline Point<T> getCenter() const {
         return getPoint(0.5);
     }
 
-    inline Segment getSubsegment(double ratioL, double ratioR) {
+    inline Segment getSubsegment(double ratioL, double ratioR) const {
         return Segment(getPoint(ratioL), getPoint(ratioR));
     }
 
-    std::vector<Segment> getSplittedSubsegments(int number, bool reverse) {
+    std::vector<Segment> getSplittedSubsegments(int number, bool reverse) const {
         std::vector<Segment> splittedSubsegments(number);
         for (int i = 0; i < number; i++) {
             splittedSubsegments[i] = getSubsegment(i * 1.0 / number, (i + 1) * 1.0 / number);
+        }
+        if (reverse) {
+            reverse(splittedSubsegments.begin(), splittedSubsegments.end());
         }
         return splittedSubsegments;
     }
