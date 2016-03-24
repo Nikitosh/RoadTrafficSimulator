@@ -18,7 +18,7 @@ public:
                + c * 3 * (1 - ratio) * pow(ratio, 2) + d * pow(ratio, 3);
     }
 
-    T length() const {
+    T getLength() const {
         Point<T> lastPoint;
         T length = 0;
         for (int i = 0; i <= POINTS_NUMBER; i++) {
