@@ -2,13 +2,14 @@
 #define ROADTRAFFICSIMULATOR_CONTROLSIGNALS_H
 
 #include <c++/string>
+#include <c++/cstdio>
 #include "Settings.h"
 
 class ControlSignals {
 private:
     const std::string NONE = "000";
-    const std::string LEFT = "100";
-    const std::string FORWARD_RIGHT = "011";
+    const std::string LEFT = "001";
+    const std::string FORWARD_RIGHT = "110";
     const std::string ALL = "111";
     static const int STATES_NUMBER = 4;
     static const int SIDE_NUMBER = 4;
@@ -19,7 +20,6 @@ private:
             {NONE, FORWARD_RIGHT, NONE, FORWARD_RIGHT}
     };
     double flipMultiplier;
-    double phaseOffset;
     double timeAccumulator;
     int stateNum;
     int roadsNumber;

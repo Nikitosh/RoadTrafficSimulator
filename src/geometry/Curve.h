@@ -1,21 +1,25 @@
 #ifndef ROADTRAFFICSIMULATOR_CURVE_H
 #define ROADTRAFFICSIMULATOR_CURVE_H
 
-#include "Point.h"
+#include "Segment.h"
 
 template <typename T>
 class Curve {
 private:
-    Point<T> a, b, c, d;
+    Point<T> a, b, p, q;
     const int POINTS_NUMBER = 10;
+    Segment<T> ap, pq, qb;
 
 public:
-    Curve(Point<T> a, Point<T> b, Point<T> c, Point<T> d): a(a), b(b), c(c), d(d) {
+    Curve(Point<T> a, Point<T> b, Point<T> p, Point<T> q): a(a), b(b), p(p), q(q) {
+        ap = Segment<T>(a, p);
+        pq = Segment<T>(p, q);
+        qb = Segment<T>(q, b);
     }
 
     Point<T> getPoint(T ratio) const {
-        return a * pow(1 - ratio, 3) + b * 3 * pow(1 - ratio, 2) * ratio
-               + c * 3 * (1 - ratio) * pow(ratio, 2) + d * pow(ratio, 3);
+        return a * pow(1 - ratio, 3) + p * 3 * pow(1 - ratio, 2) * ratio
+               + q * 3 * (1 - ratio) * pow(ratio, 2) + b * pow(ratio, 3);
     }
 
     T getLength() const {
@@ -29,6 +33,15 @@ public:
             lastPoint = point;
         }
         return length;
+    }
+
+    double getDirection(T ratio) const {
+        Point<double> p0 = ap.getPoint(ratio);
+        Point<double> p1 = pq.getPoint(ratio);
+        Point<double> p2 = qb.getPoint(ratio);
+        Point<double> r0 = Segment<T>(p0, p1).getPoint(ratio);
+        Point<double> r1 = Segment<T>(p1, p2).getPoint(ratio);
+        return Segment<T>(r0, r1).getDirection();
     }
 };
 

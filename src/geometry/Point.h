@@ -2,6 +2,7 @@
 #define ROADTRAFFICSIMULATOR_POINT_H
 
 #include <c++/cmath>
+#include <QtCore/QPoint>
 
 template <typename T>
 class Point {
@@ -31,6 +32,10 @@ public:
         return Point(x / k, y / k);
     }
 
+    inline QPoint toQPoint() const {
+        return QPoint(x, y);
+    }
+
     inline T getLength() const {
         return sqrt(x * x + y * y);
     }
@@ -40,7 +45,7 @@ public:
     }
 
     inline Point getNormalizedPoint() const {
-        T length = length();
+        T length = getLength();
         return Point(x / length, y / length);
     }
 

@@ -2,8 +2,8 @@
 #define ROADTRAFFICSIMULATOR_LANE_H
 
 #include <c++/map>
+#include "src/geometry/Segment.h"
 #include "Road.h"
-#include "../geometry/Segment.h"
 
 class LanePosition;
 
@@ -36,6 +36,10 @@ public:
         return road->getSourceSideId();
     }
 
+    inline Segment<double> getMiddleLine() const {
+        return middleLine;
+    }
+
     inline bool isRightmost() const {
         return !rightAdjacent;
     }
@@ -64,8 +68,20 @@ public:
         return middleLine.getPoint(ratio);
     }
 
-    inline int getTurnDirection(const Road &road) const {
-        return road.getTurnDirection(road);
+    inline int getTurnDirection(const Lane &lane) const {
+        return road->getTurnDirection(lane.getRoad());
+    }
+
+    inline Road* getRoad() const {
+        return road;
+    }
+
+    inline Lane* getLeftmostAdjacent() const {
+        return leftmostAdjacent;
+    }
+
+    inline Lane* getRightmostAdjacent() const {
+        return rightmostAdjacent;
     }
 };
 

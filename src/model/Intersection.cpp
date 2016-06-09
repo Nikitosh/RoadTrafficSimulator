@@ -18,12 +18,12 @@ void Intersection::update() const {
     }
 }
 
-void Intersection::addInRoad(Road &road) {
-    inRoads.push_back(&road);
+void Intersection::addInRoad(Road *road) {
+    inRoads.push_back(road);
 }
 
-void Intersection::addOutRoad(Road &road) {
-    outRoads.push_back(&road);
+void Intersection::addOutRoad(Road *road) {
+    outRoads.push_back(road);
     controlSignals->incRoadsNumber();
 }
 

@@ -4,6 +4,7 @@
 Lane::Lane(const Segment<double> &sourceSegment, const Segment<double> &targetSegment, Road &road) {
     this->sourceSegment = Segment<double>(sourceSegment);
     this->targetSegment = Segment<double>(targetSegment);
+    this->road = &road;
     update();
 }
 
@@ -33,7 +34,7 @@ void Lane::removeCarPosition(LanePosition &carPosition) {
 }
 
 LanePosition* Lane::getNext(const LanePosition &carPosition) {
-    LanePosition *best;
+    LanePosition *best = NULL;
     double bestDistance = std::numeric_limits<double>::max();
     for (auto &entry : carsPositions) {
         double distance = entry.second.getPosition() - carPosition.getPosition();

@@ -3,8 +3,7 @@
 
 ControlSignals::ControlSignals(int roadsNumber) {
     flipMultiplier = rand() * 1.0 / RAND_MAX;
-    phaseOffset = 100 * rand() * 1.0 / RAND_MAX;
-    timeAccumulator = phaseOffset;
+    timeAccumulator = 0;
     stateNum = 0;
     this->roadsNumber = roadsNumber;
 }

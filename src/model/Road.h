@@ -1,7 +1,9 @@
 #ifndef ROADTRAFFICSIMULATOR_ROAD_H
 #define ROADTRAFFICSIMULATOR_ROAD_H
 
-#include "../geometry/Segment.h"
+#include <QtCore/QRect>
+#include <QtCore/QDebug>
+#include "src/geometry/Segment.h"
 
 class Intersection;
 class Lane;
@@ -24,16 +26,24 @@ public:
         return (targetSide.getTarget() - sourceSide.getSource()).getLength();
     }
 
-    inline Lane& getLeftmostLane() {
-        return *lanes[0];
+    inline Lane* getLeftmostLane() {
+        return lanes[0];
     }
 
-    inline Lane& getRightmostLane() {
-        return *lanes.back();
+    inline Lane* getRightmostLane() {
+        return lanes.back();
     }
 
-    inline int getTurnDirection(const Road &road) const {
-        return (road.getSourceSideId() - targetSideId - 1 + 8) % 4;
+    inline int getTurnDirection(Road *road) const {
+        return (road->getSourceSideId() - targetSideId - 1 + 8) % 4;
+    }
+
+    inline Segment<double> getSourceSide() const {
+        return sourceSide;
+    }
+
+    inline Segment<double> getTargetSide() const {
+        return targetSide;
     }
 
     inline int getSourceSideId() const {
@@ -42,6 +52,30 @@ public:
 
     inline int getTargetSideId() const {
         return targetSideId;
+    }
+
+    inline Intersection* getSource() const {
+        return &source;
+    }
+
+    inline Intersection* getTarget() const {
+        return &target;
+    }
+
+    inline int getLanesNumber() const {
+        return lanes.size();
+    }
+
+    inline Lane* getLane(int index) const {
+        return lanes[index];
+    }
+
+    inline QRect getQRect() const {
+        int minX = (int) std::min(sourceSide.getSource().getX(), targetSide.getSource().getX());
+        int maxX = (int) std::max(sourceSide.getSource().getX(), targetSide.getSource().getX());
+        int minY = (int) std::min(sourceSide.getSource().getY(), targetSide.getSource().getY());
+        int maxY = (int) std::max(sourceSide.getSource().getY(), targetSide.getSource().getY());
+        return QRect(minX, minY, maxX - minX, maxY - minY);
     }
 };
 

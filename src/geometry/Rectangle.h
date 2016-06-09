@@ -1,9 +1,9 @@
 #ifndef ROADTRAFFICSIMULATOR_RECTANGLE_H
 #define ROADTRAFFICSIMULATOR_RECTANGLE_H
 
-#define _USE_MATH_DEFINES
 #include <c++/vector>
-#include <c++/cmath>
+#include <QtCore/QRect>
+#include <QtMath>
 #include "Point.h"
 #include "Segment.h"
 
@@ -11,7 +11,7 @@ template <typename T>
 class Rectangle {
 private:
     const double RIGHT_BOUNDS[5] = {-0.75 * M_PI, -0.25 * M_PI, 0.25 * M_PI, 0.75 * M_PI, 1.25 * M_PI};
-    const int SECTORS[5] = {3, 0, 1, 2, 3};
+    const int SECTORS[5] = {3, 2, 1, 0, 3};
     T left, bottom, width, height;
 
 public:
@@ -82,6 +82,10 @@ public:
 
     inline T getHeight() const {
         return height;
+    }
+
+    inline QRect toQRect() const {
+        return QRect(left, bottom, width, height);
     }
 };
 
