@@ -1,3 +1,4 @@
+#include <c++/cassert>
 #include "Lane.h"
 #include "LanePosition.h"
 
@@ -26,21 +27,22 @@ void Lane::setAdjacents(Lane *leftAdjacent, Lane *rightAdjacent, Lane *leftmostA
 }
 
 void Lane::addCarPosition(LanePosition &carPosition) {
-    carsPositions[carPosition.getId()] = carPosition;
+    carsPositions.insert(&carPosition);
 }
 
 void Lane::removeCarPosition(LanePosition &carPosition) {
-    carsPositions.erase(carPosition.getId());
+    carsPositions.erase(&carPosition);
 }
 
 LanePosition* Lane::getNext(const LanePosition &carPosition) {
     LanePosition *best = NULL;
     double bestDistance = std::numeric_limits<double>::max();
     for (auto &entry : carsPositions) {
-        double distance = entry.second.getPosition() - carPosition.getPosition();
-        if (distance > 0 && distance < bestDistance) {
+        assert(!entry->isFree());
+        double distance = entry->getPosition() - carPosition.getPosition();
+        if (distance > 0 && distance < bestDistance && !entry->isFree()) {
             bestDistance = distance;
-            best = &entry.second;
+            best = entry;
         }
     }
     return best;

@@ -1,7 +1,7 @@
 #ifndef ROADTRAFFICSIMULATOR_LANE_H
 #define ROADTRAFFICSIMULATOR_LANE_H
 
-#include <c++/map>
+#include <c++/set>
 #include "src/geometry/Segment.h"
 #include "Road.h"
 
@@ -17,7 +17,7 @@ private:
     Lane* rightAdjacent;
     Lane* leftmostAdjacent;
     Lane* rightmostAdjacent;
-    std::map<int, LanePosition> carsPositions;
+    std::set<LanePosition*> carsPositions;
 
 public:
     Lane(const Segment<double> &sourceSegment, const Segment<double> &targetSegment, Road &road);

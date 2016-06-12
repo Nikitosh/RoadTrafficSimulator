@@ -55,10 +55,11 @@ void Car::move(double delta) {
     }
     double step = speed * delta + 0.5 * acceleration * delta * delta;
     if (trajectory->getNextCarDistance().second < step) {
-        throw "Bad trajectory";
+        //something went wrong
     }
     if (trajectory->timeToMakeTurn(step)) {
         if (nextLane == NULL) {
+            trajectory->release();
             alive = false;
             return;
         }

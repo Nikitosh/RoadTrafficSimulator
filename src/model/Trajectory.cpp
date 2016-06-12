@@ -31,11 +31,9 @@ void Trajectory::startChangingLanes(Lane &lane, double nextPosition) {
 
 Lane* Trajectory::finishChangingLanes() {
     changingLines = false;
-    current->setLane(next->getLane());
-    current->setPosition(next->getPosition());
-    current->acquire();
-    next->setLane(NULL);
-    next->setPosition(0);
+    delete current;
+    current = next;
+    next = new LanePosition(car);
     curve = NULL;
     curvePosition = 0;
     return current->getLane();
@@ -80,7 +78,7 @@ Lane* Trajectory::moveForward(double distance) {
     }
     if (changingLines) {
         double curveRelativePosition = curvePosition / curve->getLength();
-        double gap = 2 * car.getLength();
+        double gap = std::min(2 * car.getLength(), curve->getLength() * 2 / 3);
         if (curvePosition > gap && !current->isFree()) {
             current->release();
         }

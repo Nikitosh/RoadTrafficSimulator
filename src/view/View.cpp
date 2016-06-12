@@ -2,8 +2,7 @@
 
 View::View() {
     world = new World;
-    world->read("C:/Jetbrains/RoadTrafficSimulator/resources/map.txt");
-    //printf("%d\n", world->getCars().size());
+    world->read("resources/map.txt");
 }
 
 void View::paintEvent(QPaintEvent *event) {
@@ -62,13 +61,14 @@ void View::paintEvent(QPaintEvent *event) {
         painter.translate(coordinates.getX(), coordinates.getY());
         painter.rotate(qRadiansToDegrees(car->getDirection()));
         painter.fillRect(QRect(-car->getLength() / 2, -car->getWidth() / 2, car->getLength(), car->getWidth()),
-        Settings::getInstance().getColor(car->getColor()));
+                         Settings::getInstance().getColor(car->getColor()));
+        painter.drawText(0, 0, QString::number(car->getId()));
     }
     painter.end();
 }
 
 void View::updateState() {
-    world->onTick(0.15);
+    world->onTick(0.5);
     viewport()->repaint();
     viewport()->update();
 }

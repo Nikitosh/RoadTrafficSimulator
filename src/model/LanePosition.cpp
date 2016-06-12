@@ -1,14 +1,19 @@
 #include "LanePosition.h"
+#include "Counter.h"
 
 LanePosition::LanePosition(Car &car): car(&car) {
     lane = NULL;
     position = 0;
+    id = Counter::getInstance().getId();
+    free = true;
 }
 
 LanePosition::LanePosition(Car &car, Lane &lane, double position) {
     this->position = position;
     this->car = &car;
     this->lane = &lane;
+    id = Counter::getInstance().getId();
+    free = true;
 }
 
 LanePosition::LanePosition() {
@@ -23,12 +28,14 @@ LanePosition* LanePosition::getNext() const {
 }
 
 void LanePosition::acquire() {
-    free = false;
-    lane->addCarPosition(*this);
+    if (lane) {
+        free = false;
+        lane->addCarPosition(*this);
+    }
 }
 
 void LanePosition::release() {
-    if (!free) {
+    if (!free && lane) {
         free = true;
         lane->removeCarPosition(*this);
     }
@@ -40,5 +47,5 @@ std::pair<Car*, double> LanePosition::getNextCarDistance() {
         return std::make_pair((Car*) NULL, std::numeric_limits<double>::max());
     }
     return std::pair<Car*, double>(next->car,
-                                    (next->position - next->car->getLength() / 2) - (position - car->getLength() / 2));
+                                    (next->position - next->car->getLength() / 2) - (position + car->getLength() / 2));
 }

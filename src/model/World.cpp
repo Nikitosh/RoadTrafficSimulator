@@ -34,6 +34,7 @@ void World::onTick(double delta) {
     for (const auto &intersection : intersections) {
         intersection->getControlSignals()->onTick(delta);
     }
+    int cnt = 0;
     for (auto it = cars.begin(); it != cars.end();) {
         Car *car = *it;
         car->move(delta);

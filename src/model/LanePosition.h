@@ -52,6 +52,10 @@ public:
     inline bool isFree() const {
         return free;
     }
+
+    inline Car* getCar() const {
+        return car;
+    }
 };
 
 #endif //ROADTRAFFICSIMULATOR_LANEPOSITION_H
