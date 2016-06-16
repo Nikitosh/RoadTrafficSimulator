@@ -6,11 +6,13 @@
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
+
 private:
     QTimer *timer;
 
 public:
     MainWindow();
+    ~MainWindow();
     void startTimer();
 };
 

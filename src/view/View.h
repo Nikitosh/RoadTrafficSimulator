@@ -10,13 +10,13 @@ class View : public QGraphicsView {
     Q_OBJECT
 
 private:
-    const double OFFSET_X[4][3] = {
+    static constexpr double OFFSET_X[4][3] = {
             {0.6, 0.725, 0.85},
             {0.85, 0.85, 0.85},
             {0.35, 0.225, 0.1},
             {0.1, 0.1, 0.1}
     };
-    const double OFFSET_Y[4][3] = {
+    static constexpr double OFFSET_Y[4][3] = {
             {0.85, 0.85, 0.85},
             {0.35, 0.225, 0.1},
             {0.1, 0.1, 0.1},

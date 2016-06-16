@@ -1,4 +1,24 @@
+#include <c++/cassert>
 #include "World.h"
+
+World::~World() {
+    for (auto car : cars) {
+        delete car;
+    }
+    for (auto intersection : intersections) {
+        delete intersection;
+    }
+    for (auto road : roads) {
+        delete road;
+    }
+}
+
+void World::clear() {
+    cars.clear();
+    intersections.clear();
+    roads.clear();
+    time = 0;
+}
 
 void World::read(const char *path) {
     FILE *inputFile = fopen(path, "r");
@@ -32,14 +52,16 @@ void World::onTick(double delta) {
     time += delta;
     refreshCars();
     for (const auto &intersection : intersections) {
-        intersection->getControlSignals()->onTick(delta);
+        intersection->getTrafficLight()->onTick(delta);
     }
-    int cnt = 0;
     for (auto it = cars.begin(); it != cars.end();) {
         Car *car = *it;
         car->move(delta);
         if (!car->isAlive()) {
             it = cars.erase(it);
+            deadCarsNumber++;
+            summaryAverageSpeed += car->getAverageSpeed();
+            delete car;
         } else {
             it++;
         }
@@ -74,4 +96,18 @@ void World::removeRandomCar() {
 
 void World::addIntersection(Intersection *intersection) {
     intersections.push_back(intersection);
+}
+
+void World::setFlipIntervals(std::vector<std::pair<double, double>> flipIntervals) {
+    assert(intersections.size() == flipIntervals.size());
+    for (int i = 0; i < intersections.size(); i++) {
+        intersections[i]->getTrafficLight()->setFlipInterval(flipIntervals[i].first, flipIntervals[i].second);
+    }
+}
+
+double World::getAverageSpeed(int iterationsNumber, double delta) {
+    for (int i = 0; i < iterationsNumber; i++) {
+        onTick(delta);
+    }
+    return getInstantSpeed();
 }

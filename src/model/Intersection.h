@@ -3,25 +3,26 @@
 
 #include "src/geometry/Rectangle.h"
 #include "Road.h"
-#include "ControlSignals.h"
+#include "TrafficLight.h"
 
 class Intersection {
 private:
     Rectangle<double> rectangle;
     std::vector<Road*> inRoads;
     std::vector<Road*> outRoads;
-    ControlSignals *controlSignals;
+    TrafficLight *trafficLight;
     int id;
 
 public:
     Intersection(const Rectangle<double> &rectangle);
     Intersection(const Intersection &intersection);
+    ~Intersection();
     void update() const;
     void addInRoad(Road *road);
     void addOutRoad(Road *road);
 
-    inline ControlSignals* getControlSignals() const {
-        return controlSignals;
+    inline TrafficLight* getTrafficLight() const {
+        return trafficLight;
     }
 
     inline Rectangle<double> getRectangle() const {

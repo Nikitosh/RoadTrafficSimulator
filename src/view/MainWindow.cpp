@@ -38,6 +38,10 @@ MainWindow::MainWindow() {
     setCentralWidget(centralWidget);
 }
 
+MainWindow::~MainWindow() {
+    delete timer;
+}
+
 void MainWindow::startTimer() {
     timer->start();
 }

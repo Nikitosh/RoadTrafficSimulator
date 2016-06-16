@@ -6,12 +6,13 @@
 template <typename T>
 class Curve {
 private:
-    Point<T> a, b, p, q;
     const int POINTS_NUMBER = 10;
+    Point<T> a, b, p, q;
     Segment<T> ap, pq, qb;
+    const double length;
 
 public:
-    Curve(Point<T> a, Point<T> b, Point<T> p, Point<T> q): a(a), b(b), p(p), q(q) {
+    Curve(Point<T> a, Point<T> b, Point<T> p, Point<T> q): a(a), b(b), p(p), q(q), length(calculateLength()) {
         ap = Segment<T>(a, p);
         pq = Segment<T>(p, q);
         qb = Segment<T>(q, b);
@@ -23,15 +24,6 @@ public:
     }
 
     T getLength() const {
-        Point<T> lastPoint;
-        T length = 0;
-        for (int i = 0; i <= POINTS_NUMBER; i++) {
-            Point<T> point = getPoint(i * 1.0 / POINTS_NUMBER);
-            if (i > 0) {
-                length += (point - lastPoint).getLength();
-            }
-            lastPoint = point;
-        }
         return length;
     }
 
@@ -42,6 +34,20 @@ public:
         Point<double> r0 = Segment<T>(p0, p1).getPoint(ratio);
         Point<double> r1 = Segment<T>(p1, p2).getPoint(ratio);
         return Segment<T>(r0, r1).getDirection();
+    }
+
+private:
+    T calculateLength() {
+        Point<T> lastPoint;
+        T length = 0;
+        for (int i = 0; i <= POINTS_NUMBER; i++) {
+            Point<T> point = getPoint(i * 1.0 / POINTS_NUMBER);
+            if (i > 0) {
+                length += (point - lastPoint).getLength();
+            }
+            lastPoint = point;
+        }
+        return length;
     }
 };
 

@@ -26,20 +26,20 @@ void Lane::setAdjacents(Lane *leftAdjacent, Lane *rightAdjacent, Lane *leftmostA
     this->rightmostAdjacent = rightmostAdjacent;
 }
 
-void Lane::addCarPosition(LanePosition &carPosition) {
-    carsPositions.insert(&carPosition);
+void Lane::addCarPosition(LanePosition *carPosition) {
+    carsPositions.insert(carPosition);
 }
 
-void Lane::removeCarPosition(LanePosition &carPosition) {
-    carsPositions.erase(&carPosition);
+void Lane::removeCarPosition(LanePosition *carPosition) {
+    carsPositions.erase(carPosition);
 }
 
-LanePosition* Lane::getNext(const LanePosition &carPosition) {
+LanePosition* Lane::getNext(LanePosition *carPosition) {
     LanePosition *best = NULL;
     double bestDistance = std::numeric_limits<double>::max();
     for (auto &entry : carsPositions) {
         assert(!entry->isFree());
-        double distance = entry->getPosition() - carPosition.getPosition();
+        double distance = entry->getPosition() - carPosition->getPosition();
         if (distance > 0 && distance < bestDistance && !entry->isFree()) {
             bestDistance = distance;
             best = entry;

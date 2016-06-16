@@ -6,18 +6,18 @@
 
 class LanePosition {
 private:
+    Lane *lane;
     Car *car;
     bool free;
     double position;
     int id;
-    Lane *lane;
 
 public:
     LanePosition(Car &car);
     LanePosition(Car &car, Lane &lane, double position);
     LanePosition();
     std::pair<Car*, double> getNextCarDistance();
-    LanePosition* getNext() const;
+    LanePosition* getNext();
     void acquire();
     void release();
 

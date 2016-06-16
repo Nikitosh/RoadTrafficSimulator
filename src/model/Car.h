@@ -7,36 +7,32 @@ class Trajectory;
 
 class Car {
 private:
-    int id;
-    int color;
-    double speed;
-    double width;
-    double length;
     static constexpr double maxSpeed = 30;
     static constexpr double distanceGap = 2;
     static constexpr double timeHeadway = 1.5;
     static constexpr double maxAcceleration = 1;
     static constexpr double maxDeceleration = 3;
+    int id;
+    int color;
+    double speed;
+    double width;
+    double length;
+    double time = 0;
+    double distance = 0;
     bool alive = true;
     Lane *nextLane;
     Trajectory *trajectory;
 public:
     Car(Lane &lane, double position);
-    double getAcceleration();
+    ~Car();
     void move(double delta);
-    Road* pickNextRoad();
     Lane* pickNextLane();
     Lane* popNextLane();
-    void release();
     Point<double> getCoordinates();
     double getDirection();
 
     inline double getSpeed() {
         return speed;
-    }
-
-    inline void setSpeed(double speed) {
-        this->speed = speed;
     }
 
     inline double getLength() {
@@ -62,6 +58,14 @@ public:
     inline int getColor() const {
         return color;
     }
+
+    inline double getAverageSpeed() const {
+        return distance / time;
+    }
+
+private:
+    double getAcceleration();
+    Road* pickNextRoad();
 };
 
 #endif //ROADTRAFFICSIMULATOR_CAR_H

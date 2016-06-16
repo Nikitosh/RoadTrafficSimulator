@@ -3,10 +3,14 @@
 
 Intersection::Intersection(const Rectangle<double> &rectangle): rectangle(rectangle) {
     id = Counter::getInstance().getId();
-    controlSignals = new ControlSignals(outRoads.size());
+    trafficLight = new TrafficLight(outRoads.size());
 }
 
 Intersection::Intersection(const Intersection &intersection): rectangle(intersection.rectangle), id(intersection.id) {
+}
+
+Intersection::~Intersection() {
+    delete trafficLight;
 }
 
 void Intersection::update() const {
@@ -24,6 +28,6 @@ void Intersection::addInRoad(Road *road) {
 
 void Intersection::addOutRoad(Road *road) {
     outRoads.push_back(road);
-    controlSignals->incRoadsNumber();
+    trafficLight->incRoadsNumber();
 }
 

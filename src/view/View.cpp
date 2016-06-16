@@ -1,8 +1,11 @@
 #include "View.h"
 
+constexpr double View::OFFSET_X[4][3];
+constexpr double View::OFFSET_Y[4][3];
+
 View::View() {
     world = new World;
-    world->read("resources/map.txt");
+    world->read(Settings::getInstance().MAP_PATH);
 }
 
 void View::paintEvent(QPaintEvent *event) {
@@ -37,7 +40,7 @@ void View::paintEvent(QPaintEvent *event) {
 
         int width = (int) intersection->getRectangle().getWidth();
         for (int i = 0; i < 4; i++) {
-            std::string s = intersection->getControlSignals()->getState(i);
+            std::string s = intersection->getTrafficLight()->getState(i);
             QColor color = Qt::red;
             for (int j = 0; j < 3; j++) {
                 if (s[2 - j] == '1') {
@@ -47,8 +50,8 @@ void View::paintEvent(QPaintEvent *event) {
                     color = Qt::red;
                 }
                 painter.fillRect(
-                        QRect(intersection->getRectangle().getLeft() + OFFSET_X[i][j] * width,
-                              intersection->getRectangle().getBottom() + OFFSET_Y[i][j] * width,
+                        QRect(intersection->getRectangle().getLeft() + View::OFFSET_X[i][j] * width,
+                              intersection->getRectangle().getBottom() + View::OFFSET_Y[i][j] * width,
                               width * 0.05, width * 0.05), color);
             }
         }
@@ -60,9 +63,11 @@ void View::paintEvent(QPaintEvent *event) {
         painter.resetTransform();
         painter.translate(coordinates.getX(), coordinates.getY());
         painter.rotate(qRadiansToDegrees(car->getDirection()));
-        painter.fillRect(QRect(-car->getLength() / 2, -car->getWidth() / 2, car->getLength(), car->getWidth()),
-                         Settings::getInstance().getColor(car->getColor()));
-        painter.drawText(0, 0, QString::number(car->getId()));
+        painter.drawImage(QRect(-car->getLength() / 2, -car->getWidth() / 2, car->getLength(), car->getWidth()),
+                          Settings::getInstance().getCarImage(car->getColor()));
+        //painter.fillRect(QRect(-car->getLength() / 2, -car->getWidth() / 2, car->getLength(), car->getWidth()),
+        //                 Settings::getInstance().getColor(car->getColor()));
+        //painter.drawText(0, 0, QString::number(car->getId()));
     }
     painter.end();
 }

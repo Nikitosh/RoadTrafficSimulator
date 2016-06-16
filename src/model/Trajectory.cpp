@@ -1,7 +1,7 @@
 #include "Trajectory.h"
 #include "Intersection.h"
 
-Trajectory::Trajectory(Car &car, Lane &lane, double position): car(car) {
+Trajectory::Trajectory(Car &car, Lane &lane, double position) : car(car) {
     current = new LanePosition(car, lane, position);
     current->acquire();
     next = new LanePosition(car);
@@ -9,37 +9,12 @@ Trajectory::Trajectory(Car &car, Lane &lane, double position): car(car) {
     curve = NULL;
 }
 
-Curve<double> Trajectory::getAdjacentLaneChangeCurve() {
-    Point<double> p1 = current->getLane()->getPoint(current->getRelativePosition());
-    Point<double> p2 = next->getLane()->getPoint(next->getRelativePosition());
-    double distance = (p2 - p1).getLength();
-    Point<double> direction1 = current->getLane()->getMiddleLine().getVector().getNormalizedPoint() * distance * 0.3;
-    Point<double> control1 = p1 + direction1;
-    Point<double> direction2 = next->getLane()->getMiddleLine().getVector().getNormalizedPoint() * distance * 0.3;
-    Point<double> control2 = p2 - direction2;
-    return Curve<double>(p1, p2, control1, control2);
-}
-
-void Trajectory::startChangingLanes(Lane &lane, double nextPosition) {
-    changingLines = true;
-    next->setLane(&lane);
-    next->setPosition(nextPosition);
-    curve = new Curve<double>(getAdjacentLaneChangeCurve());
-    curvePosition = 0;
-    next->setPosition(nextPosition - curve->getLength());
-}
-
-Lane* Trajectory::finishChangingLanes() {
-    changingLines = false;
+Trajectory::~Trajectory() {
     delete current;
-    current = next;
-    next = new LanePosition(car);
-    curve = NULL;
-    curvePosition = 0;
-    return current->getLane();
+    delete next;
 }
 
-std::pair<Car*, double> Trajectory::getNextCarDistance() {
+std::pair<Car *, double> Trajectory::getNextCarDistance() {
     auto a = current->getNextCarDistance();
     auto b = next->getNextCarDistance();
     if (a.second < b.second) {
@@ -55,20 +30,7 @@ double Trajectory::getDistanceToStopLine() {
     return std::numeric_limits<double>::max();
 }
 
-bool Trajectory::isValidTurn() {
-    return true;
-}
-
-bool Trajectory::canEnterIntersection() {
-    if (!car.getNextLane()) {
-        return true;
-    }
-    int turnNumber = current->getLane()->getTurnDirection(*car.getNextLane());
-    int sideId = current->getLane()->getRoad()->getTargetSideId();
-    return getNextIntersection()->getControlSignals()->getState(sideId)[turnNumber] - '0';
-}
-
-Lane* Trajectory::moveForward(double distance) {
+Lane *Trajectory::moveForward(double distance) {
     distance = std::max(distance, 0.0);
     current->setPosition(current->getPosition() + distance);
     next->setPosition(next->getPosition() + distance);
@@ -108,3 +70,48 @@ void Trajectory::release() {
         next->release();
     }
 }
+
+Curve<double> Trajectory::getAdjacentLaneChangeCurve() {
+    Point<double> p1 = current->getLane()->getPoint(current->getRelativePosition());
+    Point<double> p2 = next->getLane()->getPoint(next->getRelativePosition());
+    double distance = (p2 - p1).getLength();
+    Point<double> direction1 = current->getLane()->getMiddleLine().getVector().getNormalizedPoint() * distance * 0.3;
+    Point<double> control1 = p1 + direction1;
+    Point<double> direction2 = next->getLane()->getMiddleLine().getVector().getNormalizedPoint() * distance * 0.3;
+    Point<double> control2 = p2 - direction2;
+    return Curve<double>(p1, p2, control1, control2);
+}
+
+void Trajectory::startChangingLanes(Lane &lane, double nextPosition) {
+    changingLines = true;
+    next->setLane(&lane);
+    next->setPosition(nextPosition);
+    curve = new Curve<double>(getAdjacentLaneChangeCurve());
+    curvePosition = 0;
+    next->setPosition(nextPosition - curve->getLength());
+}
+
+Lane *Trajectory::finishChangingLanes() {
+    changingLines = false;
+    delete current;
+    current = next;
+    next = new LanePosition(car);
+    delete curve;
+    curve = NULL;
+    curvePosition = 0;
+    return current->getLane();
+}
+
+bool Trajectory::isValidTurn() {
+    return true;
+}
+
+bool Trajectory::canEnterIntersection() {
+    if (!car.getNextLane()) {
+        return true;
+    }
+    int turnNumber = current->getLane()->getTurnDirection(car.getNextLane());
+    int sideId = current->getLane()->getRoad()->getTargetSideId();
+    return getNextIntersection()->getTrafficLight()->getState(sideId)[turnNumber] - '0';
+}
+

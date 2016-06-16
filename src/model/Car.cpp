@@ -16,24 +16,8 @@ Car::Car(Lane &lane, double position) {
     trajectory = new Trajectory(*this, lane, position);
 }
 
-double Car::getAcceleration() {
-    auto nextCarDistance = trajectory->getNextCarDistance();
-    double distanceToNextCar = std::max(0.0, nextCarDistance.second);
-    double a = maxAcceleration;
-    double b = maxDeceleration;
-    double deltaSpeed = 0;
-    if (nextCarDistance.first != NULL) {
-        deltaSpeed = speed - nextCarDistance.first->getSpeed();
-    }
-    double freeRoadCoefficient = pow(speed / maxSpeed, 4);
-    double distanceGap = this->distanceGap;
-    double timeGap = speed * timeHeadway;
-    double breakGap = speed * deltaSpeed / (2 * sqrt(a * b));
-    double safeDistance = distanceGap + timeGap + breakGap;
-    double busyRoadCoefficient = pow(safeDistance / distanceToNextCar, 2);
-    double safeIntersectionDistance = 1 + timeGap + pow(speed, 2) / (2 * b);
-    double intersectionCoefficient = pow(safeIntersectionDistance / trajectory->getDistanceToStopLine(), 2);
-    return maxAcceleration * (1 - freeRoadCoefficient - busyRoadCoefficient - intersectionCoefficient);
+Car::~Car() {
+    delete trajectory;
 }
 
 void Car::move(double delta) {
@@ -42,7 +26,7 @@ void Car::move(double delta) {
     speed = std::max(speed, 0.);
     if (!trajectory->isChangingLines() && nextLane) {
         Lane *currentLane = trajectory->getCurrent()->getLane();
-        int turnNumber = currentLane->getTurnDirection(*nextLane);
+        int turnNumber = currentLane->getTurnDirection(nextLane);
         Lane *preferredLane = currentLane;
         if (turnNumber == 0) {
             preferredLane = currentLane->getLeftmostAdjacent();
@@ -65,22 +49,8 @@ void Car::move(double delta) {
         }
     }
     trajectory->moveForward(step);
-}
-
-Road* Car::pickNextRoad() {
-    Intersection *intersection = trajectory->getNextIntersection();
-    Lane *currentLane = trajectory->getCurrent()->getLane();
-    int roadsNumber = intersection->getRoadsNumber();
-    std::vector<Road*> possibleRoads;
-    for (int i = 0; i < roadsNumber; i++) {
-        if (intersection->getRoad(i)->getTarget() != currentLane->getRoad()->getSource()) {
-            possibleRoads.push_back(intersection->getRoad(i));
-        }
-    }
-    if (possibleRoads.size() == 0) {
-        return NULL;
-    }
-    return possibleRoads[rand() % possibleRoads.size()];
+    time += delta;
+    distance += std::max(step, 0.);
 }
 
 Lane* Car::pickNextLane() {
@@ -106,10 +76,6 @@ Lane* Car::popNextLane() {
     return lastLane;
 }
 
-void Car::release() {
-    trajectory->release();
-}
-
 Point<double> Car::getCoordinates() {
     return trajectory->getCoordinates();
 }
@@ -117,3 +83,40 @@ Point<double> Car::getCoordinates() {
 double Car::getDirection() {
     return trajectory->getDirection();
 }
+
+double Car::getAcceleration() {
+    auto nextCarDistance = trajectory->getNextCarDistance();
+    double distanceToNextCar = std::max(0.0, nextCarDistance.second);
+    double a = maxAcceleration;
+    double b = maxDeceleration;
+    double deltaSpeed = 0;
+    if (nextCarDistance.first != NULL) {
+        deltaSpeed = speed - nextCarDistance.first->getSpeed();
+    }
+    double freeRoadCoefficient = pow(speed / maxSpeed, 4);
+    double distanceGap = this->distanceGap;
+    double timeGap = speed * timeHeadway;
+    double breakGap = speed * deltaSpeed / (2 * sqrt(a * b));
+    double safeDistance = distanceGap + timeGap + breakGap;
+    double busyRoadCoefficient = pow(safeDistance / distanceToNextCar, 2);
+    double safeIntersectionDistance = 1 + timeGap + pow(speed, 2) / (2 * b);
+    double intersectionCoefficient = pow(safeIntersectionDistance / trajectory->getDistanceToStopLine(), 2);
+    return maxAcceleration * (1 - freeRoadCoefficient - busyRoadCoefficient - intersectionCoefficient);
+}
+
+Road* Car::pickNextRoad() {
+    Intersection *intersection = trajectory->getNextIntersection();
+    Lane *currentLane = trajectory->getCurrent()->getLane();
+    int roadsNumber = intersection->getRoadsNumber();
+    std::vector<Road*> possibleRoads;
+    for (int i = 0; i < roadsNumber; i++) {
+        if (intersection->getRoad(i)->getTarget() != currentLane->getRoad()->getSource()) {
+            possibleRoads.push_back(intersection->getRoad(i));
+        }
+    }
+    if (possibleRoads.size() == 0) {
+        return NULL;
+    }
+    return possibleRoads[rand() % possibleRoads.size()];
+}
+

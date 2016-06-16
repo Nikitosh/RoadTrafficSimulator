@@ -13,16 +13,12 @@ private:
     Car &car;
     Curve<double> *curve;
     double curvePosition;
-    Curve<double> getAdjacentLaneChangeCurve();
-    void startChangingLanes(Lane &lane, double nextPosition);
-    Lane* finishChangingLanes();
 
 public:
     Trajectory(Car &car, Lane &lane, double position);
+    ~Trajectory();
     std::pair<Car*, double> getNextCarDistance();
     double getDistanceToStopLine();
-    bool isValidTurn();
-    bool canEnterIntersection();
     Lane* moveForward(double distance);
     void changeLane(Lane &lane);
     void release();
@@ -85,6 +81,14 @@ public:
     inline LanePosition* getCurrent() {
         return current;
     }
+
+private:
+    Curve<double> getAdjacentLaneChangeCurve();
+    void startChangingLanes(Lane &lane, double nextPosition);
+    Lane* finishChangingLanes();
+    bool isValidTurn();
+    bool canEnterIntersection();
+
 };
 
 

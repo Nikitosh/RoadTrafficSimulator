@@ -3,23 +3,25 @@
 
 #include <QtCore/Qt>
 #include <QtGui/QColor>
+#include <QtGui/QImage>
 
 class Settings {
 private:
-    const static int COLORS_SIZE = 7;
-    const QColor COLORS[COLORS_SIZE] = {Qt::black, Qt::cyan, Qt::darkCyan, Qt::magenta, Qt::darkMagenta, Qt::blue, Qt::darkBlue};
+    static const int COLORS_SIZE = 5;
     static Settings* instance;
     Settings();
-    double lightsFlipInterval = 100;
+    QImage carsImages[COLORS_SIZE];
+    static constexpr double flipMultiplier = 100;
     double gridSize = 50;
     double carLengthScale;
     double carWidthScale;
 
 public:
+    static constexpr const char *MAP_PATH = "resources/map.txt";
     static Settings& getInstance();
 
-    inline double getLightsFlipInterval() const {
-        return lightsFlipInterval;
+    inline double getFlipMultiplier() const {
+        return flipMultiplier;
     }
 
     inline double getGridSize() const {
@@ -46,8 +48,8 @@ public:
         return COLORS_SIZE;
     }
 
-    inline QColor getColor(int index) const {
-        return COLORS[index];
+    inline QImage getCarImage(int color) {
+        return carsImages[color];
     }
 };
 

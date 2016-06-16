@@ -24,9 +24,9 @@ public:
     Lane();
     void update();
     void setAdjacents(Lane *leftAdjacent, Lane *rightAdjacent, Lane *leftmostAdjacent, Lane *rightmostAdjacent);
-    void addCarPosition(LanePosition &carPosition);
-    void removeCarPosition(LanePosition &carPosition);
-    LanePosition* getNext(const LanePosition &carPosition);
+    void addCarPosition(LanePosition *carPosition);
+    void removeCarPosition(LanePosition *carPosition);
+    LanePosition* getNext(LanePosition *carPosition);
 
     inline int getSourceSideId() const {
         return road->getSourceSideId();
@@ -68,8 +68,8 @@ public:
         return middleLine.getPoint(ratio);
     }
 
-    inline int getTurnDirection(const Lane &lane) const {
-        return road->getTurnDirection(lane.getRoad());
+    inline int getTurnDirection(Lane *lane) const {
+        return road->getTurnDirection(lane->getRoad());
     }
 
     inline Road* getRoad() const {

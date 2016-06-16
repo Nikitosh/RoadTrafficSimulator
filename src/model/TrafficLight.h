@@ -5,7 +5,7 @@
 #include <c++/cstdio>
 #include "Settings.h"
 
-class ControlSignals {
+class TrafficLight {
 private:
     const std::string NONE = "000";
     const std::string LEFT = "001";
@@ -19,30 +19,20 @@ private:
             {NONE, LEFT, NONE, LEFT},
             {NONE, FORWARD_RIGHT, NONE, FORWARD_RIGHT}
     };
-    double flipMultiplier;
     double timeAccumulator;
+    double flipIntervals[2];
     int stateNum;
     int roadsNumber;
 
 public:
-    ControlSignals(int roadsNumber);
-
-    inline double getFlipInterval() const {
-        return (0.1 + 0.05 * flipMultiplier) * Settings::getInstance().getLightsFlipInterval();
-    }
-
-    inline void flip() {
-        stateNum++;
-        if (stateNum == STATES_NUMBER) {
-            stateNum = 0;
-        }
-    }
+    TrafficLight(int roadsNumber);
 
     inline void onTick(double delta) {
         timeAccumulator += delta;
-        if (timeAccumulator >= getFlipInterval()) {
+        double flipInterval = flipIntervals[stateNum & 1] * Settings::getInstance().getFlipMultiplier();
+        if (timeAccumulator >= flipInterval) {
+            timeAccumulator -= flipInterval;
             flip();
-            timeAccumulator -= getFlipInterval();
         }
     }
 
@@ -53,8 +43,25 @@ public:
         return STATES[stateNum][sideId];
     }
 
-    inline int incRoadsNumber() {
+    inline void incRoadsNumber() {
         roadsNumber++;
+    }
+
+    inline const double* getFlipInterval() const {
+        return flipIntervals;
+    }
+
+    inline void setFlipInterval(double greenFlipInterval, double redFlipInterval) {
+        flipIntervals[0] = greenFlipInterval;
+        flipIntervals[1] = redFlipInterval;
+    }
+
+private:
+    inline void flip() {
+        stateNum++;
+        if (stateNum == STATES_NUMBER) {
+            stateNum = 0;
+        }
     }
 };
 

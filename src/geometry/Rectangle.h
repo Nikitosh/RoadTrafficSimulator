@@ -2,6 +2,7 @@
 #define ROADTRAFFICSIMULATOR_RECTANGLE_H
 
 #include <c++/vector>
+#include <c++/cassert>
 #include <QtCore/QRect>
 #include <QtMath>
 #include "Point.h"
@@ -58,6 +59,7 @@ public:
                 return SECTORS[i];
             }
         }
+        assert(false);
     }
 
     inline T getLeft() const {
