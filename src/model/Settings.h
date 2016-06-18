@@ -3,18 +3,19 @@
 
 #include <QtCore/Qt>
 #include <QtGui/QColor>
-#include <QtGui/QImage>
+#include <QtGui/QPixmap>
 
 class Settings {
 private:
     static const int COLORS_SIZE = 5;
     static Settings* instance;
-    Settings();
-    QImage carsImages[COLORS_SIZE];
-    static constexpr double flipMultiplier = 100;
-    double gridSize = 50;
-    double carLengthScale;
-    double carWidthScale;
+    const double flipMultiplier = 100;
+    const double gridSize = 450;
+    const double roadLength = 1500;
+    const double carLength = 150;
+    const double carWidth = 75;
+    double scale = 1;
+    QPixmap carsPixmaps[COLORS_SIZE];
 
 public:
     static constexpr const char *MAP_PATH = "resources/map.txt";
@@ -28,29 +29,36 @@ public:
         return gridSize;
     }
 
-    inline double getCarLengthScale() const {
-        return carLengthScale;
+    inline double getRoadLength() const {
+        return roadLength;
     }
 
-    inline void setCarLengthScale(double carLengthScale) {
-        this->carLengthScale = carLengthScale;
+    inline double getCarLength() const {
+        return carLength;
     }
 
-    inline double getCarWidthScale() const {
-        return carWidthScale;
+    inline double getCarWidth() const {
+        return carWidth;
     }
 
-    inline void setCarWidthScale(double carWidthScale) {
-        this->carWidthScale = carWidthScale;
+    inline double getScale() const {
+        return scale;
+    }
+
+    inline void setScale(double scale) {
+        this->scale = scale;
     }
 
     inline int getColorNumber() const {
         return COLORS_SIZE;
     }
 
-    inline QImage getCarImage(int color) {
-        return carsImages[color];
+    inline QPixmap getCarPixmap(int color) {
+        return carsPixmaps[color];
     }
+
+private:
+    Settings();
 };
 
 #endif //ROADTRAFFICSIMULATOR_SETTINGS_H

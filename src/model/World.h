@@ -16,7 +16,9 @@ private:
     int deadCarsNumber = 0;
 
 public:
+    static constexpr int TURN[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     ~World();
+    static World* generateFullMap(int h, int w, int carsNumber);
     void clear();
     void read(const char *path);
     void onTick(double delta);
@@ -37,6 +39,10 @@ public:
 
     inline int getCarsNumber() {
         return carsNumber;
+    }
+
+    inline void setCarsNumber(int carsNumber) {
+        this->carsNumber = carsNumber;
     }
 
     inline double getInstantSpeed() {

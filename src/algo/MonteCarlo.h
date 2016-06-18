@@ -2,8 +2,9 @@
 #define ROADTRAFFICSIMULATOR_MONTECARLO_H
 
 #include <src/model/World.h>
+#include "OptimizationAlgorithm.h"
 
-class MonteCarlo {
+class MonteCarlo : public OptimizationAlgorithm {
 private:
     const static int RUN_NUMBER = 1;
     const static int ITERATIONS_NUMBER = 10000;

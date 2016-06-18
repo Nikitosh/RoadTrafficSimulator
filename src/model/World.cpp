@@ -1,6 +1,8 @@
 #include <c++/cassert>
 #include "World.h"
 
+constexpr int World::TURN[4][2];
+
 World::~World() {
     for (auto car : cars) {
         delete car;
@@ -11,6 +13,33 @@ World::~World() {
     for (auto road : roads) {
         delete road;
     }
+}
+
+World* World::generateFullMap(int h, int w, int carsNumber) {
+    World *world = new World();
+    int intersectionsNumber = h * w;
+    double width = Settings::getInstance().getGridSize();
+    double roadLength = Settings::getInstance().getRoadLength();
+    for (int i = 0; i < h * w; i++) {
+        int x = i % w, y = i / w;
+        world->addIntersection(new Intersection(Rectangle<double>(x * (width + roadLength), y * (width + roadLength),
+                                                                  width, width)));
+    }
+    auto intersections = world->getIntersections();
+    for (int i = 0; i < h * w; i++) {
+        int x = i % w, y = i / w;
+        for (int j = 0; j < 4; j++) {
+            int newX = x + World::TURN[j][0], newY = y + World::TURN[j][1];
+            if (newX >= 0 && newX < w && newY >= 0 && newY < h) {
+                world->addRoad(new Road(*intersections[i], *intersections[newY * w + newX]));
+            }
+        }
+    }
+    world->setCarsNumber(carsNumber);
+    for (int i = 0; i < carsNumber; i++) {
+        world->addRandomCar();
+    }
+    return world;
 }
 
 void World::clear() {
@@ -24,10 +53,13 @@ void World::read(const char *path) {
     FILE *inputFile = fopen(path, "r");
     int intersectionsNumber;
     fscanf(inputFile, "%d", &intersectionsNumber);
+    double width = Settings::getInstance().getGridSize();
+    double roadLength = Settings::getInstance().getRoadLength();
     for (int i = 0; i < intersectionsNumber; i++) {
-        int left, bottom, width, height;
-        fscanf(inputFile, "%d%d%d%d", &left, &bottom, &width, &height);
-        addIntersection(new Intersection(Rectangle<double>(left, bottom, width, height)));
+        int x, y;
+        fscanf(inputFile, "%d%d", &y, &x);
+        addIntersection(new Intersection(Rectangle<double>(x * (width + roadLength), y * (width + roadLength),
+                                                           width, width)));
     }
     int roadsNumber;
     fscanf(inputFile, "%d", &roadsNumber);
@@ -36,12 +68,9 @@ void World::read(const char *path) {
         fscanf(inputFile, "%d%d", &source, &target);
         addRoad(new Road(*intersections[source - 1], *intersections[target - 1]));
     }
-    double carLengthScale;
-    fscanf(inputFile, "%lf", &carLengthScale);
-    Settings::getInstance().setCarLengthScale(carLengthScale);
-    double carWidthScale;
-    fscanf(inputFile, "%lf", &carWidthScale);
-    Settings::getInstance().setCarWidthScale(carWidthScale);
+    double scale;
+    fscanf(inputFile, "%lf", &scale);
+    Settings::getInstance().setScale(scale);
     fscanf(inputFile, "%d", &carsNumber);
     for (int i = 0; i < carsNumber; i++) {
         addRandomCar();
@@ -87,7 +116,7 @@ void World::addRoad(Road *road) {
 void World::addRandomCar() {
     Road *road = roads[rand() % roads.size()];
     Lane *lane = road->getLane(rand() % road->getLanesNumber());
-    cars.push_back(new Car(*lane, 3 * Settings::getInstance().getCarLengthScale()));
+    cars.push_back(new Car(*lane, Settings::getInstance().getCarLength() / 2));
 }
 
 void World::removeRandomCar() {

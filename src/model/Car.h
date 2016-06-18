@@ -7,11 +7,11 @@ class Trajectory;
 
 class Car {
 private:
-    static constexpr double maxSpeed = 30;
-    static constexpr double distanceGap = 2;
+    static constexpr double maxSpeed = 300;
+    static constexpr double distanceGap = 20;
     static constexpr double timeHeadway = 1.5;
-    static constexpr double maxAcceleration = 1;
-    static constexpr double maxDeceleration = 3;
+    static constexpr double maxAcceleration = 5;
+    static constexpr double maxDeceleration = 15;
     int id;
     int color;
     double speed;

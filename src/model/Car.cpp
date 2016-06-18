@@ -9,8 +9,8 @@ Car::Car(Lane &lane, double position) {
     id = Counter::getInstance().getId();
     color = rand() % Settings::getInstance().getColorNumber();
     speed = 0;
-    length = (3 + 2 * (rand() / RAND_MAX)) * Settings::getInstance().getCarLengthScale();
-    width = 1.7 * Settings::getInstance().getCarWidthScale();
+    length = Settings::getInstance().getCarLength();
+    width = Settings::getInstance().getCarWidth();
     alive = true;
     nextLane = NULL;
     trajectory = new Trajectory(*this, lane, position);

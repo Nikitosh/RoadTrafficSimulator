@@ -2,8 +2,9 @@
 #define ROADTRAFFICSIMULATOR_SIMULATEDANNEALING_H
 
 #include <src/model/World.h>
+#include "OptimizationAlgorithm.h"
 
-class SimulatedAnnealing {
+class SimulatedAnnealing : public OptimizationAlgorithm {
 private:
     const static int RUN_NUMBER = 1;
     const static int ITERATIONS_NUMBER = 10000;
@@ -13,7 +14,7 @@ private:
 
 public:
     SimulatedAnnealing();
-    double run();
+    virtual double run();
 };
 
 #endif //ROADTRAFFICSIMULATOR_SIMULATEDANNEALING_H
