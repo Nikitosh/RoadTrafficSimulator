@@ -11,8 +11,7 @@ void Road::update() {
     targetSideId = target.getRectangle().getSectorId(source.getRectangle().getCenter());
     sourceSide = source.getRectangle().getSide(sourceSideId).getSubsegment(0, 0.5);
     targetSide = target.getRectangle().getSide(targetSideId).getSubsegment(0.5, 1);
-    int lanesNumber = std::max(2, (int) (std::min(sourceSide.getLength(),
-                                      targetSide.getLength()) / Settings::getInstance().getGridSize()));
+    int lanesNumber = Settings::getInstance().getLaneNumber();
     std::vector<Segment<double>> sourceSplits = sourceSide.getSplittedSubsegments(lanesNumber, true);
     std::vector<Segment<double>> targetSplits = targetSide.getSplittedSubsegments(lanesNumber, false);
     lanes.resize(lanesNumber);

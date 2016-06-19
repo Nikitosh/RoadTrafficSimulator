@@ -6,12 +6,10 @@
 
 class MonteCarlo : public OptimizationAlgorithm {
 private:
-    const static int RUN_NUMBER = 1;
-    const static int ITERATIONS_NUMBER = 10000;
-    World *world;
+    const static int RUN_NUMBER = 300;
+    const static int ITERATIONS_NUMBER = 1000;
 
 public:
-    MonteCarlo();
     double run();
 };
 

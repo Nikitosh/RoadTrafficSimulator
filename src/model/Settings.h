@@ -10,16 +10,18 @@ private:
     static const int COLORS_SIZE = 5;
     static Settings* instance;
     const double flipMultiplier = 100;
-    const double gridSize = 450;
+    const double gridSize = 700;
     const double roadLength = 1500;
     const double carLength = 150;
     const double carWidth = 75;
+    const int laneNumber = 3;
     double scale = 1;
-    QPixmap carsPixmaps[COLORS_SIZE];
+    QPixmap *carsPixmaps[COLORS_SIZE];
 
 public:
     static constexpr const char *MAP_PATH = "resources/map.txt";
     static Settings& getInstance();
+    void initialize();
 
     inline double getFlipMultiplier() const {
         return flipMultiplier;
@@ -41,6 +43,10 @@ public:
         return carWidth;
     }
 
+    inline int getLaneNumber() const {
+        return laneNumber;
+    }
+
     inline double getScale() const {
         return scale;
     }
@@ -54,7 +60,7 @@ public:
     }
 
     inline QPixmap getCarPixmap(int color) {
-        return carsPixmaps[color];
+        return *carsPixmaps[color];
     }
 
 private:

@@ -40,7 +40,7 @@ Lane *Trajectory::moveForward(double distance) {
     }
     if (changingLines) {
         double curveRelativePosition = curvePosition / curve->getLength();
-        double gap = std::min(2 * car.getLength(), curve->getLength() * 2 / 3);
+        double gap = std::min(2 * car.getLength(), curve->getLength() * 1.5 / 3);
         if (curvePosition > gap && !current->isFree()) {
             current->release();
         }

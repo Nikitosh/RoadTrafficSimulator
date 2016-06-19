@@ -6,14 +6,12 @@
 
 class Genetic : public OptimizationAlgorithm {
 private:
-    const static int POPULATION_NUMBER = 5;
-    const static int RUN_NUMBER = 100;
-    const static int ITERATIONS_NUMBER = 100;
-    World *world;
+    const static int POPULATION_NUMBER = 10;
+    const static int RUN_NUMBER = 20;
+    const static int ITERATIONS_NUMBER = 1000;
     std::vector<std::vector<std::pair<double, double>>> populations;
 
 public:
-    Genetic();
     virtual double run();
 };
 

@@ -5,7 +5,9 @@
 
 class Utilities {
 public:
-    static double calculateAverageSpeed(World *world, std::vector<std::pair<double, double>> flipIntervals, int iterationsNumber);
+    static const int HEIGHT = 3;
+    static const int WIDTH = 4;
+    static double calculateAverageSpeed(std::vector<std::pair<double, double>> flipIntervals, int iterationsNumber);
 };
 
 #endif //ROADTRAFFICSIMULATOR_UTILITIES_H

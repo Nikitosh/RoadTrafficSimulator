@@ -18,7 +18,7 @@ MainWindow::MainWindow() {
     connect(scaleSlider, &QAbstractSlider::valueChanged, this, &MainWindow::scaleView);
 
     view = new QGraphicsView;
-    World *world = World::generateFullMap(6, 8, 100);
+    World *world = World::generateFullMap(3, 4, 100);
     Scene *scene = new Scene(world);
     view->setScene(scene);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
